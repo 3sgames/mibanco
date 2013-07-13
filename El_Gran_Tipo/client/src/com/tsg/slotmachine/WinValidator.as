@@ -19,118 +19,6 @@
 			return today_date.getDay();
 		}
 		
-		static public function getRandomHourToday():int
-		{
-			var mod:uint;// = 8;
-			var mod0:uint = 10;
-			var ran:Number = 0.3;//Math.random();
-			
-			//trace(">"+getDayToday());
-			//if(getDayToday() == 6)
-			//	mod = 5;
-			var date:uint = (Global.todayDate).getDate() + 100;
-			var n:uint = (1372383749 * date + 1289706101) & 4294967295;
-			n = n % mod0;//+ 8;//n % 11 + 8;
-			trace("random hour: ", n);
-			/*if(ran <= 0.2){
-				if(getDayToday() == 6){
-					if(n < 4)
-						mod = 8;
-					else if(n == 4)
-						mod = 4;
-				}
-				else{
-					if(n < 8)
-						mod = 8;
-					else if(n >= 8)
-						mod = 5;
-				}
-			}
-			else {*/
-				if(getDayToday() == 6){
-					if(n < 3)
-						mod = 10;
-					else if(n >= 3){
-						n %= 3;
-						mod = 10;
-					}
-				}
-				else{
-					if(n < 8){
-						n %= 3;
-						mod = 15;
-					}else if(n >= 8)
-						mod = 8;
-				}
-			//}
-			n += mod;
-			
-			//trace("random hour mod: ", n,ran);
-			
-			if (getDayToday() == 6)
-			{
-				if(n == 12)
-				{
-					half = true;
-				}
-				else
-				{
-					half = false;
-				}
-			}
-			else
-			{
-				if(n == 17)
-				{
-					half = true;
-				}
-				else
-				{
-					half = false;
-				}
-			}
-			
-			return n;
-		}
-		
-		static public function getRandomMinuteToday():int
-		{
-			var date:uint = (Global.todayDate).getDate() + 200;
-			var n:uint = (1372383749 * date + 1289706101) & 4294967295;
-			var mod:int = 60;
-			if(half)
-				mod = 30;
-			n = n % mod;//60;
-			//trace("random minute: ", n);
-			return n;
-		}
-		
-		static public function getTimeMillis():Number
-		{
-			var hours:Number = getRandomHourToday();
-			var mins:Number = getRandomMinuteToday();
-			var returnDate:Date = new Date(Global.todayDate.fullYear,Global.todayDate.month,Global.todayDate.date,hours,mins,0,0);
-			
-			return returnDate.time;
-		}
-		
-		static public function setInitValues():void
-		{
-			values = getRandomValues();
-		}
-		
-		static public function setFinalValues():void 
-		{
-			values = getRandomValues();
-			
-			if (isTimeToWin())
-			{	
-				values[1] = 1;
-				values[4] = 1;
-				values[7] = 1;
-			}
-		}
-		
 		static private function getRandomValues():Array
 		{
 			values = [2, 3, 4, 5, 6, 7, 8, 9, 0];
@@ -147,9 +35,10 @@
 		{
 			var seed:int = Global.seed;
 			
-			// generar dias aleatorios solo para la cantidad de dias habiles
+			// dias aleatorios solo para la cantidad de dias habiles
 			var randomWinners:Array = MiBancoGenerator.getValues(Global.totDays, Global.iniStock);
-			//trace(randomWinners);
+			
+			// calcula cuantos días en total hay en el periodo
 			var totalNoBusinessDaysElapsed:int = getNoBusinessDaysElapsed(Global.startDate, Global.endDate);
 			
 			// repartir los premios entre los días habiles
@@ -176,6 +65,7 @@
 				winnerDays.push(info);
 			}
 			
+			// toString()
 			winnerDays.toString = function()
 			{
 				var str:String = "";
@@ -197,9 +87,13 @@
 		
 		public static function isTimeToWin():Boolean 
 		{
+			// obtiene lista de dias ganadores
 			Global.winnerDays = getWinnerDays();
 			
+			// calcula dias en general transcurridos
 			var elapsedNoBusinessDays:int = getNoBusinessDaysElapsed(Global.startDate, Global.todayDate);
+			
+			// premios por entregar
 			var remainingPrizes:int = Global.iniStock - Global.stock;
 			var i:int;
 			var accumulated:int = 0;
@@ -215,23 +109,32 @@
 			Main.debugger.println("stock actual : " + Global.stock);
 			Main.debugger.println("premios acumulados : " + accumulated);
 			
-			
+			// si aun quedan premios acumulados hasta la fecha
 			if (accumulated > 0 && Global.iniStock - accumulated <= Global.stock)
 			{
-				// aun no se acaban los premios programados hasta hoy
-				//var accumulatedPrizesForToday:int = (Global.stock - Global.iniStock + accumulated);
-				
-				//Main.debugger.println("premios acumulados hasta la fecha: " + accumulatedPrizesForToday);
-				
 				//---- esto se calcula con la ultima jugada del día 
 				var initTime:Date = new Date(Global.lastWinDate.fullYear, Global.lastWinDate.month, Global.lastWinDate.date, Global.lastWinDate.hours, Global.lastWinDate.minutes, 0, 0);
 				
+				// si la ultima jugada fue antes de hoy se actualiza como las 9:00
 				if (initTime.getTime() < new Date(Global.todayDate.fullYear, Global.todayDate.month, Global.todayDate.date, 9, 0, 0, 0).getTime())
 				{
-					initTime = new Date(Global.todayDate.fullYear, Global.todayDate.month, Global.todayDate.date, 9, 0, 0, 0);
+					initTime = new Date(
+						Global.todayDate.fullYear,
+						Global.todayDate.month,
+						Global.todayDate.date,
+						9, 0, 0, 0
+					);
 				}
 				
-				var endTime:Date = new Date(Global.todayDate.fullYear, Global.todayDate.month, Global.todayDate.date, 18, 0, 0, 0);
+				if (Global.todayDate.getDay() == 6)
+				{
+					var endTime:Date = new Date(Global.todayDate.fullYear, Global.todayDate.month, Global.todayDate.date, 12, 0, 0, 0);
+				}
+				else
+				{
+					var endTime:Date = new Date(Global.todayDate.fullYear, Global.todayDate.month, Global.todayDate.date, 18, 0, 0, 0);
+				}
+				
 				var lapse:int = (endTime.getTime() - initTime.getTime()) / (accumulated + 1);
 				
 				Main.debugger.println("\ninicio del rango:\t " + initTime);
