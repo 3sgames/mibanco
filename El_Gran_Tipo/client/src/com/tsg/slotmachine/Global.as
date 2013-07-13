@@ -36,11 +36,18 @@
 		public static var remainingDays:Number = -1;
 		public static var ratio:Number = -1;
 		
-		public static var businessDays:Array = [];
+		//public static var businessDays:Array = [];
 		
-		public static var URLfile:String = "http://192.168.1.202:8080/GranTipo/post_noWSDL.jsp";
+		public static var URLfile:String = "http://192.168.1.200:8080/GranTipo/post_noWSDL.jsp";
 		
 		public static var timeToWin:Boolean = new Boolean();
+		static public var seed:Number;
+		static public var winnerDays:Array;
+		static public var iniStock:int;
+		static public var stock:int;
+		static public var businessDays:Array;
+		static public var totNoBusinessDays:int;
+		static public var lastWinDate:Date;
 		
 		public function Global() 
 		{

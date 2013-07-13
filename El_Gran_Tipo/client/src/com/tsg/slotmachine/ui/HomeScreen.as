@@ -33,22 +33,25 @@
 			var content:MovieClip = new mcHomeScreen();
 			canvas.addChild(content);
 			canvas.parent.addChild(Main.debugger);
-			//trace(WinValidator.getRandomHourToday()+":"+WinValidator.getRandomMinuteToday());
+			
 			Global.flush();
 			checkServer();
 		}
 		
-		public function checkValid(){
-			//Main.debugger.setText("Check network connection...");
+		public function checkValid()
+		{
+			Main.debugger.setText("Check network connection...");
+			
 			try
 			{
-				//Main.debugger.println("Reading crossdomain.xml");
+				Main.debugger.println("Reading crossdomain.xml");
 				Security.loadPolicyFile("http://3sgames.com/crossdomain.xml");
 			}
 			catch (error:Error)
 			{
-				//Main.debugger.println("Eror No Network Connection");
-			} 
+				Main.debugger.println("Eror No Network Connection");
+			}
+			
 			var _variables:URLVariables = new URLVariables();
 			_variables.method = "check";
 			var _request:URLRequest = new URLRequest("http://3sgames.com/validate/check.php");
@@ -58,10 +61,12 @@
 			loader.addEventListener(IOErrorEvent.IO_ERROR, handleIOError);
 			loader.load(_request);
 		}
+		
 		private function handleIOError(evt:Event)
 		{
-			Main.debugger.println("Failed");
+			Main.debugger.println("Failedddd" + evt);
 		}
+		
 		private function loadingdata(evt:Event)
 		{
 			Main.debugger.println("Pass");
@@ -89,49 +94,49 @@
 			innerLoader.removeEventListener(Event.COMPLETE, loadingdata);
 			var resp:String= evt.currentTarget.data as String;
 			resp = resp.substring(0,resp.indexOf("\n"));
-			Main.debugger.println("Calcular días de campaña r:"+resp);
+			//Main.debugger.println("Calcular días de campaña r:" + resp);
+			
 			var jarr:Array = JSON.decode(resp) as Array;
-			if(jarr[0].error == "OK"){
+			if (jarr[0].error == "OK")
+			{
 				var year:Number;
 				var month:Number;
 				var day:Number;
+				var hour:Number;
+				var minute:Number;
 				
 				year = parseInt(jarr[0].today.substr(0,4));
 				month = parseInt(jarr[0].today.substr(4,2))-1;
 				day = parseInt(jarr[0].today.substr(6,2));
-				Global.todayDate= new Date(year,month,day,0,0,0,0);
+				hour = parseInt(jarr[0].today.substr(9,2));
+				minute = parseInt(jarr[0].today.substr(12,2));
+				Global.todayDate = new Date(year, month, day, hour, minute, 0, 0);
+				
+				trace("Fecha de hoy:\t\t ", Global.todayDate);
 				
 				year = parseInt(jarr[0].start.substr(0,4));
 				month = parseInt(jarr[0].start.substr(4,2))-1;
 				day = parseInt(jarr[0].start.substr(6,2));
-				Main.debugger.println("Inicio de Campaña: "+day+" - "+(month + 1)+" - "+year);
+				Main.debugger.println("Inicio de Campaña:\t"+day+" - "+(month + 1)+" - "+year);
 				Global.startDate = new Date(year, month, day, 0, 0, 0, 0);
 				
 				year = parseInt(jarr[0].end.substr(0,4));
 				month = parseInt(jarr[0].end.substr(4,2))-1;
 				day = parseInt(jarr[0].end.substr(6,2));
-				Main.debugger.println("Fin de Campaña: "+day+" - "+(month + 1)+" - "+year);
-				Global.endDate= new Date(year,month,day,0,0,0,0);
+				Main.debugger.println("Fin de Campaña   :\t"+day+" - "+(month + 1)+" - "+year);
+				Global.endDate = new Date(year, month, day, 0, 0, 0, 0);
 				
-				//genera arreglo de días últiles
+				
 				Global.businessDays = WinValidator.getBusinessDays(Global.startDate, Global.endDate);
-				Main.debugger.println("\nDías útiles:");
-				Main.debugger.println(Global.businessDays.toString());
 				
-				//trace(MiBancoGenerator.getValues(10, 5));
+				Global.totDays = WinValidator.businessDaysElapsed(Global.startDate, Global.endDate);
+				//Main.debugger.println("Días útiles totales: " + Global.totDays);
 				
-				//var tmpDate:Date = new Date(Global.todayDate.fullYear,Global.todayDate.month,Global.todayDate.date,0,0,0,0);
-				//Main.debugger.println("Hoy: "+tmpDate.date+" - "+(tmpDate.month + 1)+" - "+tmpDate.fullYear);
-				//Global.totDays = WinValidator.businessDaysElapsed(Global.startDate,Global.endDate);
-				//Main.debugger.println("Días útiles totales: "+Global.totDays);
-				//Global.startDate = new Date(year,month,day,0,0,0,0);
-				//Global.elapsedDays = WinValidator.businessDaysElapsed(Global.startDate,tmpDate);
-				//Main.debugger.println("Días útiles transcurridos: "+ Global.elapsedDays);
-				//Global.startDate = new Date(year,month,day,0,0,0,0);
-				//Global.remainingDays = WinValidator.businessDaysElapsed(tmpDate,Global.endDate);
-				//Main.debugger.println("Días útiles restantes: "+ Global.remainingDays);
+				Global.elapsedDays = WinValidator.businessDaysElapsed(Global.startDate, Global.todayDate);
+				//Main.debugger.println("Días útiles transcurridos: " + Global.elapsedDays);
 				
-				
+				Global.remainingDays = WinValidator.businessDaysElapsed(Global.todayDate, Global.endDate);
+				//Main.debugger.println("Días útiles restantes: " + Global.remainingDays);
 				
 				Main.debugger.println("Launching game...");
 				
@@ -144,8 +149,6 @@
 		
 		override public function update(dt:int):void 
 		{
-			//trace(MiBancoGenerator.getRandomValue(int(Math.random() * 100)));
-			//trace(MiBancoGenerator.getValues(100, 10));
 			super.update(dt);
 		}
 		

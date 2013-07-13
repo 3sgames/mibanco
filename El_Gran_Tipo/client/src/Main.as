@@ -26,9 +26,10 @@
 			var d:Boolean = ExternalInterface.call("checkDebug");
 			
 			//Modificar la siguiente línea
-			debugger.visible = true;//d;
+			debugger.visible = true;
 			debugger.setText("Start Application ");
 			Global.stage = stage;
+			
 			var engine:Engine = new Engine(this.stage, HomeScreen);
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, _onKeyDown);

@@ -2,6 +2,7 @@
 {	
 	import com.gloop.ui.Screen;
 	import com.gloop.ui.ScreenManager;
+	import com.tsg.slotmachine.MiBancoGenerator;
 	import flash.display.MovieClip;
 	import flash.events.MouseEvent;
 	import com.tsg.slotmachine.Global;
@@ -33,19 +34,27 @@
 			
 			var amo:Number = parseFloat(Global.amountInput);
 			
-			if(amo <= 500){
+			if (amo <= 500)
+			{
+				Global.seed = 10;
 				Global.prize = "S/. 50";
 				Global.category = "PZ01";
 			}
-			else if(amo <= 2000){
+			else if (amo <= 2000)
+			{
+				Global.seed = 20;
 				Global.prize = "S/. 100";
 				Global.category = "PZ02";
 			}
-			else if(amo <= 5000){
+			else if (amo <= 5000)
+			{
+				Global.seed = 30;
 				Global.prize = "S/. 150";
 				Global.category = "PZ03";
 			}
-			else if(amo > 5000){
+			else if (amo > 5000)
+			{
+				Global.seed = 40;
 				Global.prize = "S/. 300";
 				Global.category = "PZ04";
 			}
@@ -80,15 +89,17 @@
 		private function loadingdata(evt:Event)
 		{
 			loader.removeEventListener(Event.COMPLETE, loadingdata);
+			
 			Main.debugger.println("Successfully sent");
 			Main.debugger.println("Reading retrieved values");
+			
 			var resp:String= evt.currentTarget.data as String;
-			resp = resp.substring(0,resp.indexOf("\n"));
+			resp = resp.substring(0, resp.indexOf("\n"));
 			var jarr:Array = JSON.decode(resp) as Array;
 			
 			if (jarr[0].error != "OK")
 			{
-				TweenLite.delayedCall(3, function():void
+				TweenLite.delayedCall(2, function():void
 				{
 					ScreenManager.instance.gotoScreen(ErrorScreen);
 				});
@@ -103,155 +114,117 @@
 				Global.codRet = jarr[1].codRet;
 				Global.msgErr = jarr[1].msgErr;
 				
+				Global.stock = parseInt(jarr[2].stock);
+				Global.iniStock = parseInt(jarr[2].iniStock);
+				
+				var year:int;
+				var month:int;
+				var day:int;
+				var hours:int;
+				var minutes:int;
+				var seconds:int;
+				
+				// última jugada
+				year = parseInt(jarr[2].lastWinDate.substr(0,4));
+				month = parseInt(jarr[2].lastWinDate.substr(5,2))-1;
+				day = parseInt(jarr[2].lastWinDate.substr(8,2));
+				hours = parseInt(jarr[2].lastWinDate.substr(11,2));
+				minutes = parseInt(jarr[2].lastWinDate.substr(14,2));
+				Main.debugger.println("Última jugada: " + day + " - " + (month + 1) + " - " + year + " a las: " + hours + ":" + minutes);
+				
+				Global.lastWinDate = new Date(year, month, day, hours, minutes);
+				trace(Global.lastWinDate);
+				
+				Main.debugger.println("\nMonto ingresado: " + Global.amountInput);
+				Main.debugger.println("Categoría: " + Global.category);
+				
+				// si hoy hay ganadores
 				if (WinValidator.isTimeToWin())
 				{
-					trace("gano");
+					saveData(true);
 				}
-				
-				//var amo:Number = parseFloat(Global.amountInput);
-				//
-				//ran = Math.floor(Math.random() * 10);
-				//
-				//if(amo < 50){
-					//ran = 10;
-				//}
-				//if(parseInt(jarr[2].stock) == 0)
-					//ran = 11;
-				//
-				//Global.ratio = Math.ceil(Global.totDays / (parseInt(jarr[2].totWinners) + parseInt(jarr[2].stock)));
-				//var tmp = Math.floor(Global.remainingDays / parseInt(jarr[2].stock));
-				//Main.debugger.println("ratio : "+Global.ratio + "|| tmp : "+tmp);
-				//if(Global.ratio != tmp && Global.remainingDays <= parseInt(jarr[2].stock))
-					//Global.ratio = 1;
-				//55
-				//30|20|10|5
-				//2
-				//Main.debugger.println("Participa por:"+Global.prize);
-				//Main.debugger.println("Ganadores hasta la fecha:"+jarr[2].totWinners);
-				//Main.debugger.println("Razon de entrega: 1 premio cada "+Global.ratio+" dia(s)");
-				//Main.debugger.println("Stock restante:"+jarr[2].stock);
-				//Main.debugger.println("Probabilidad:"+ran);
-				//Main.debugger.println("Días transcurridos de período:"+(Global.elapsedDays % Global.ratio));
-				//Main.debugger.println("Días de campaña transcurridos: "+Global.elapsedDays);
-				//Main.debugger.println("Días de campaña restantes: "+ Global.remainingDays);
-				//
-				//checkPeriod();
+				else
+				{
+					saveData(false);
+				}
 			}
 		}
-		//private function checkPeriod(){
-			//Main.debugger.println("Sending data to verify if can win");
-			//var _variables:URLVariables = new URLVariables();
-			//_variables.method = "checkTime";
-			//_variables.time = WinValidator.getTimeMillis();
-			//_variables.daysBefore = (Global.elapsedDays % Global.ratio)+1;
-			//_variables.cat = Global.category;
-			//var _request:URLRequest = new URLRequest(Global.URLfile);
-			//_request.method = URLRequestMethod.POST;
-			//_request.data = _variables;
-			//checkLoader.addEventListener(Event.COMPLETE, loadedVerification);
-			//checkLoader.addEventListener(IOErrorEvent.IO_ERROR, handleIOError);
-			//checkLoader.load(_request);
-		//}
 		
-		//private function loadedVerification(evt:Event)
-		//{
-			//checkLoader.removeEventListener(Event.COMPLETE, loadedVerification);
-			//Main.debugger.println("Pass");
-			//var resp:String= evt.currentTarget.data as String;
-			//resp = resp.substring(0,resp.indexOf("\n"));
-			//var jarr:Array = JSON.decode(resp) as Array;
-			//
-			//Main.debugger.println("Insurance Policy(Hour):"+jarr[0].happyHour);
-			//Main.debugger.println("Hay ganador en período:"+jarr[0].existWinner);
-			//
-			//var existWinner:Number = parseInt(jarr[0].existWinner);
-			//var happyHour:Boolean = (jarr[0].happyHour == "true")?true:false;
-			//
-			//if(ran != 11){
-				//if(existWinner !=0) {
-					//ran = 12;
-					//Main.debugger.println("No puede ganar porque ya hay ganadore(s) en el período");
-				//}
-					//
-				//if((Global.elapsedDays + 1) % Global.ratio == 0 && existWinner == 0 && happyHour){
-					//ran = 0;
-					//Main.debugger.println("La jugada es ganadora por estar en fecha límite de período y no haber ganadores.");
-				//}
-			//}
-			//
-			//if(ran < 0){
-				//TweenLite.delayedCall(3, function():void {
-					//ScreenManager.instance.gotoScreen(ErrorScreen);
-				//});
-			//}
-			//else if (ran < 3){
-				//saveData(true);
-			//}
-			//else{
-				//saveData(false);
-			//}
-		//}
-		//
-		//private function saveData(winner:Boolean){
-			//Main.debugger.println("Sending data to Server.(Save result)");
-			//var _variables:URLVariables = new URLVariables();
-			//_variables.method = "saveData";
-			//_variables.suc = Global.codSuc;
-			//_variables.mod = Global.codMod;
-			//_variables.trans = Global.codTrans;
-			//_variables.rel = Global.codRel;
-			//_variables.amo = Global.amountInput;
-			//_variables.tipoDoc = Global.tipoDoc;
-			//_variables.numDoc = Global.numDoc;
-			//_variables.nomCli = Global.nomCli;
-			//_variables.nomAge = Global.nomAge;
-			//_variables.cat = Global.category;
-			//_variables.prize = Global.prize;
-			//_variables.req = Global.req;
-			//_variables.codRet = Global.codRet;
-			//_variables.msgErr = Global.msgErr;
-			//_variables.winner = winner;
-			//var _request:URLRequest = new URLRequest(Global.URLfile);
-			//_request.method = URLRequestMethod.POST;
-			//_request.data = _variables;
-			//if(winner)
-				//winLoader.addEventListener(Event.COMPLETE, showWin);
-			//else
-				//winLoader.addEventListener(Event.COMPLETE, showLose);
-			//winLoader.addEventListener(IOErrorEvent.IO_ERROR, handleIOError);
-			//winLoader.load(_request);
-		//}
-		//
-		//private function showWin(evt:Event)
-		//{
-			//winLoader.removeEventListener(Event.COMPLETE, showWin);
-			//Main.debugger.println("Successfully sent");
-			//var resp:String= evt.currentTarget.data as String;
-			//resp = resp.substring(0,resp.indexOf("\n"));
-			//var jarr:Array = JSON.decode(resp) as Array;
-			//var err:String = jarr[0].error;
-			//trace("e>"+err);
-			//if(err == "OK"){
-				//TweenLite.delayedCall(3, function():void {
-					//ScreenManager.instance.gotoScreen(WinScreen);
-				//});
-			//}
-			//else{
-				//TweenLite.delayedCall(3, function():void {
-					//ScreenManager.instance.gotoScreen(LoseScreen);
-				//});
-			//}
-		//}
-		//private function showLose(evt:Event)
-		//{
-			//winLoader.removeEventListener(Event.COMPLETE, showLose);
-			//Main.debugger.println("Successfully sent");
-			//var resp:String= evt.currentTarget.data as String;
-			//resp = resp.substring(0,resp.indexOf("\n"));
-			//TweenLite.delayedCall(3, function():void {
-				//ScreenManager.instance.gotoScreen(LoseScreen);
-			//});
-		//}
+		private function saveData(winner:Boolean)
+		{
+			Main.debugger.println("Sending data to Server.(Save result)");
+			var _variables:URLVariables = new URLVariables();
+			_variables.method = "saveData";
+			_variables.suc = Global.codSuc;
+			_variables.mod = Global.codMod;
+			_variables.trans = Global.codTrans;
+			_variables.rel = Global.codRel;
+			_variables.amo = Global.amountInput;
+			_variables.tipoDoc = Global.tipoDoc;
+			_variables.numDoc = Global.numDoc;
+			_variables.nomCli = Global.nomCli;
+			_variables.nomAge = Global.nomAge;
+			_variables.cat = Global.category;
+			_variables.prize = Global.prize;
+			_variables.req = Global.req;
+			_variables.codRet = Global.codRet;
+			_variables.msgErr = Global.msgErr;
+			_variables.winner = winner;
+			var _request:URLRequest = new URLRequest(Global.URLfile);
+			_request.method = URLRequestMethod.POST;
+			_request.data = _variables;
+			
+			trace("winner: " + winner);
+			
+			if (winner)
+			{	
+				trace("mostrando ganar");
+				winLoader.addEventListener(Event.COMPLETE, showWin);
+			}
+			else
+			{
+				trace("mostrando perder");
+				winLoader.addEventListener(Event.COMPLETE, showLose);
+			}
+			
+			winLoader.addEventListener(IOErrorEvent.IO_ERROR, handleIOError);
+			winLoader.load(_request);
+		}
+		
+		private function showWin(evt:Event)
+		{
+			winLoader.removeEventListener(Event.COMPLETE, showWin);
+			Main.debugger.println("Successfully sent");
+			var resp:String= evt.currentTarget.data as String;
+			resp = resp.substring(0,resp.indexOf("\n"));
+			var jarr:Array = JSON.decode(resp) as Array;
+			var err:String = jarr[0].error;
+			trace("e>"+err);
+			
+			if (err == "OK")
+			{
+				TweenLite.delayedCall(3, function():void {
+					ScreenManager.instance.gotoScreen(WinScreen);
+				});
+			}
+			else
+			{
+				TweenLite.delayedCall(3, function():void {
+					ScreenManager.instance.gotoScreen(LoseScreen);
+				});
+			}
+		}
+		
+		private function showLose(evt:Event)
+		{
+			winLoader.removeEventListener(Event.COMPLETE, showLose);
+			Main.debugger.println("Successfully sent");
+			var resp:String= evt.currentTarget.data as String;
+			resp = resp.substring(0,resp.indexOf("\n"));
+			TweenLite.delayedCall(3, function():void {
+				ScreenManager.instance.gotoScreen(LoseScreen);
+			});
+		}
 		
 		override public function update(dt:int):void 
 		{

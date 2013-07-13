@@ -70,41 +70,65 @@
 			Global.codTrans = content["txtTrans"].text;
 			Global.codRel = content["txtRel"].text;
  			
-			if((Global.codSuc.length == 0 || Global.codSuc.length > 3) ||
-			   (Global.codMod.length == 0 || Global.codMod.length > 3) ||
-			   (Global.codTrans.length == 0 || Global.codTrans.length > 3) ||
-			   (Global.codRel.length == 0 || Global.codRel.length > 4) ||
-			   parseFloat(Global.amountInput) < 50 ||
-			   !checkStartDate() || !checkEndDate())
-				ScreenManager.instance.gotoScreen(ErrorScreen);
-			else
+			//if((Global.codSuc.length == 0 || Global.codSuc.length > 3) ||
+			   //(Global.codMod.length == 0 || Global.codMod.length > 3) ||
+			   //(Global.codTrans.length == 0 || Global.codTrans.length > 3) ||
+			   //(Global.codRel.length == 0 || Global.codRel.length > 4) ||
+			   //parseFloat(Global.amountInput) < 50 ||
+			   //!checkStartDate() || !checkEndDate())
+				//ScreenManager.instance.gotoScreen(ErrorScreen);
+			//else
 				ScreenManager.instance.gotoScreen(WaitScreen);
 		}
 		
-		private function checkStartDate():Boolean{
-			var tmpDate:Date = new Date((new Date()).getFullYear(),(new Date()).getMonth(),(new Date()).getDate(),0,0,0,0);
-			if(tmpDate.fullYear >= Global.startDate.fullYear){
-				if(tmpDate.month > Global.startDate.month)
+		private function checkStartDate():Boolean
+		{
+			var tmpDate:Date = new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDate(), 0, 0, 0, 0);
+			
+			if (tmpDate.fullYear >= Global.startDate.fullYear)
+			{
+				if (tmpDate.month > Global.startDate.month)
+				{
 					return true;
-				else if(tmpDate.month == Global.startDate.month && tmpDate.date >= Global.startDate.date)
+				}
+				else if (tmpDate.month == Global.startDate.month && tmpDate.date >= Global.startDate.date)
+				{
 					return true;
+				}
 				else
+				{
 					return false;
-			}else
+				}
+			}
+			else
+			{
 				return false;
+			}
 		}
 		
-		private function checkEndDate():Boolean{
-			var tmpDate:Date = new Date((new Date()).getFullYear(),(new Date()).getMonth(),(new Date()).getDate(),0,0,0,0);
-			if(tmpDate.fullYear <= Global.endDate.fullYear){
-				if(tmpDate.month < Global.endDate.month)
+		private function checkEndDate():Boolean
+		{
+			var tmpDate:Date = new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDate(), 0, 0, 0, 0);
+			
+			if (tmpDate.fullYear <= Global.endDate.fullYear)
+			{
+				if (tmpDate.month < Global.endDate.month)
+				{
 					return true;
-				else if(tmpDate.month == Global.endDate.month && tmpDate.date <= Global.endDate.date)
+				}
+				else if (tmpDate.month == Global.endDate.month && tmpDate.date <= Global.endDate.date)
+				{
 					return true;
+				}
 				else
+				{	
 					return false;
-			}else
+				}
+			}
+			else
+			{
 				return false;
+			}
 		}
 		
 		override public function update(dt:int):void 
