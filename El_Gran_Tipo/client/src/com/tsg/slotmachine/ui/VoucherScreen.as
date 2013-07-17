@@ -70,14 +70,14 @@
 			Global.codTrans = content["txtTrans"].text;
 			Global.codRel = content["txtRel"].text;
  			
-			//if((Global.codSuc.length == 0 || Global.codSuc.length > 3) ||
-			   //(Global.codMod.length == 0 || Global.codMod.length > 3) ||
-			   //(Global.codTrans.length == 0 || Global.codTrans.length > 3) ||
-			   //(Global.codRel.length == 0 || Global.codRel.length > 4) ||
-			   //parseFloat(Global.amountInput) < 50 ||
-			   //!checkStartDate() || !checkEndDate())
-				//ScreenManager.instance.gotoScreen(ErrorScreen);
-			//else
+			if((Global.codSuc.length == 0 || Global.codSuc.length > 3) ||
+			   (Global.codMod.length == 0 || Global.codMod.length > 3) ||
+			   (Global.codTrans.length == 0 || Global.codTrans.length > 3) ||
+			   (Global.codRel.length == 0 || Global.codRel.length > 4) ||
+			   parseFloat(Global.amountInput) < 50 ||
+			   !checkStartDate() || !checkEndDate())
+				ScreenManager.instance.gotoScreen(ErrorScreen);
+			else
 				ScreenManager.instance.gotoScreen(WaitScreen);
 		}
 		

@@ -38,7 +38,7 @@
 		
 		//public static var businessDays:Array = [];
 		
-		public static var URLfile:String = "http://192.168.1.200:8080/GranTipo/post_noWSDL.jsp";
+		public static var URLfile:String = "../post.jsp";
 		
 		public static var timeToWin:Boolean = new Boolean();
 		static public var seed:Number;

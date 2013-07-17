@@ -64,7 +64,7 @@
 		
 		private function handleIOError(evt:Event)
 		{
-			Main.debugger.println("Failedddd" + evt);
+			Main.debugger.println("Failed" + evt);
 		}
 		
 		private function loadingdata(evt:Event)
