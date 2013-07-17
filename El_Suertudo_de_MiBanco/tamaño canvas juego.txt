@@ -1,0 +1,10 @@
+tamaño del espacio de juego
+x600
+y410
+
+offsets:
+x100
+y125
+
+tamaño de ficha: 128x128
+espacio de separacion: 29px
