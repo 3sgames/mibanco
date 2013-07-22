@@ -47,7 +47,7 @@
 		{
 			var _variables:URLVariables = new URLVariables();
 			_variables.method = "readVars";
-			var _request:URLRequest = new URLRequest("index.jsp");
+			var _request:URLRequest = new URLRequest("http://192.168.1.47:8080/Sabiasque/index.jsp");
 			_request.method = URLRequestMethod.POST;
 			_request.data = _variables;
 			loader.addEventListener(Event.COMPLETE, loadingdata);
@@ -56,6 +56,7 @@
 		
 		private function loadingdata(evt:Event)
 		{
+			trace("loading data");
 			loader.removeEventListener(Event.COMPLETE, loadingdata);
 			
 			var resp:String= evt.currentTarget.data as String;
@@ -71,42 +72,43 @@
 			Global.bt_ope_dat = jarr[6].ope_dat;
 			Global.bt_fir_dep_dat = jarr[7].fir_dep_dat;
 			//Global.bt_game_dat = jarr[8].game_dat;
-			Global.bt_dep_curr = jarr[9].dep_curr;
-			Global.bt_fir_dep_amo = jarr[10].fir_dep_amo;
-			Global.bt_mac_user = jarr[11].mac_user;
+			Global.bt_dep_curr = jarr[8].dep_curr;
+			Global.bt_fir_dep_amo = jarr[9].fir_dep_amo;
+			Global.bt_mac_user = jarr[10].mac_user;
 			//Global.bt_winner = jarr[12].winner;
 			//Global.bt_prize = jarr[13].prize;
 			
-			debugToServ(Global.bt_age_cod+"\n"+
-						Global.bt_cli_acc+"\n"+
-						Global.bt_tit_nam+"\n"+
-						Global.bt_acc_typ+"\n"+
-						Global.bt_user_dni+"\n"+
-						Global.bt_user_sex+"\n"+
-						Global.bt_ope_dat+"\n"+
-						Global.bt_fir_dep_dat+"\n"+
-						//Global.bt_game_dat+"\n"+
-						Global.bt_dep_curr+"\n"+
-						Global.bt_fir_dep_amo+"\n"+
-						Global.bt_mac_user+"\n"
-						//Global.bt_winner+"\n"+
-						//Global.bt_prize
-						);
+			trace(
+				Global.bt_age_cod+"\n"+
+				Global.bt_cli_acc+"\n"+
+				Global.bt_tit_nam+"\n"+
+				Global.bt_acc_typ+"\n"+
+				Global.bt_user_dni+"\n"+
+				Global.bt_user_sex+"\n"+
+				Global.bt_ope_dat+"\n"+
+				Global.bt_fir_dep_dat+"\n"+
+				//Global.bt_game_dat+"\n"+
+				Global.bt_dep_curr+"\n"+
+				Global.bt_fir_dep_amo+"\n"+
+				Global.bt_mac_user+"\n"
+				//Global.bt_winner+"\n"+
+				//Global.bt_prize
+			);
 			
 			TweenLite.delayedCall(1.5, function():void {
 				ScreenManager.instance.gotoScreen(GameScreen);
 			});
 		}
 		
-		private function debugToServ(str:String):void{
-			var _variables:URLVariables = new URLVariables();
-			_variables.method = "debugger";
-			_variables.logged = str;
-			var _request:URLRequest = new URLRequest("post.jsp");
-			_request.method = URLRequestMethod.POST;
-			_request.data = _variables;
-			dbgloader.load(_request);
-		}
+		//private function debugToServ(str:String):void{
+			//var _variables:URLVariables = new URLVariables();
+			//_variables.method = "debugger";
+			//_variables.logged = str;
+			//var _request:URLRequest = new URLRequest("post.jsp");
+			//_request.method = URLRequestMethod.POST;
+			//_request.data = _variables;
+			//dbgloader.load(_request);
+		//}
 		
 		override public function update(dt:int):void 
 		{

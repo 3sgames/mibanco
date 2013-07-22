@@ -145,7 +145,19 @@ try{
 		String cat = request.getParameter("cat");
 		int totDays = Integer.parseInt(request.getParameter("totDays"));
 		
+	System.out.println(
+		"\nsuc: " + suc + 
+		"\nmod: " + mod + 
+		"\ntrans: " + trans + 
+		"\nrel: " + rel + 
+		"\namo: " + amo + 
+		"\ncat " + cat + 
+		"\ntotDays: " + totDays
+	);
+		
 		int daysBefore = Integer.parseInt(request.getParameter("daysBefore"));
+		
+		System.out.println("dysBefore: " + daysBefore);
 		
 		query = "exec dbo.spgt_consulta_usuario '"+suc+"','"+mod+"','"+trans+"','"+rel+"','"+dateFormat.format(date)+"';";
 		st = con.prepareStatement(query);
@@ -185,22 +197,27 @@ try{
 			System.out.println("Error on WSDL");
 		}
 		//--
+		System.out.println("exist: " + exist);
+		System.out.println("amo: " + amo);
+		System.out.println("res.getImonto: " + res.getImonto());
+		System.out.println("res.getCodret: " + res.getCodret());
+		
 		if(exist == 0 && amo == res.getImonto() && res.getCodret().equals("OK")){
 			query = "exec dbo.spgt_insertar_usuario '"+suc+"','"+mod+"','"+trans+"','"+rel+"','"+amo+"';";
 			st = con.prepareStatement(query);
 			st.execute();
-			jobj.put("error",res.getCodret());
-			jarr.add(0,jobj);
+			jobj.put("error", res.getCodret());
+			jarr.add(0, jobj);
 			jobj = new JSONObject();
-			jobj.put("tipoDoc",res.getTdocumento());
-			jobj.put("numDoc",res.getNdocumento());
-			jobj.put("nomCli",res.getNcliente());
-			jobj.put("nomAge",res.getNombreagencia());
+			jobj.put("tipoDoc", res.getTdocumento());
+			jobj.put("numDoc", res.getNdocumento());
+			jobj.put("nomCli", res.getNcliente());
+			jobj.put("nomAge", res.getNombreagencia());
 
-			jobj.put("req",res.getCumplerequisitos());
-			jobj.put("codRet",res.getCodret());
-			jobj.put("msgErr",res.getMsgerr());
-			jarr.add(1,jobj);
+			jobj.put("req", res.getCumplerequisitos());
+			jobj.put("codRet", res.getCodret());
+			jobj.put("msgErr", res.getMsgerr());
+			jarr.add(1, jobj);
 			query = "exec dbo.spgt_stock '"+cat+"';";
 			st = con.prepareStatement(query);
 			rs = st.executeQuery();

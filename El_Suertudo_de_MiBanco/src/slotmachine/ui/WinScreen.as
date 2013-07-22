@@ -73,7 +73,7 @@
 			_variables.mac_user = Global.bt_mac_user;
 			_variables.winner = "S";//Global.bt_winner;
 			_variables.prize = Global.winner_comb[4];//Global.bt_prize;
-			var _request:URLRequest = new URLRequest("index.jsp");
+			var _request:URLRequest = new URLRequest("http://192.168.1.47:8080/Sabiasque/index.jsp");
 			_request.method = URLRequestMethod.POST;
 			_request.data = _variables;
 			loader.addEventListener(Event.COMPLETE, loadingdata);
