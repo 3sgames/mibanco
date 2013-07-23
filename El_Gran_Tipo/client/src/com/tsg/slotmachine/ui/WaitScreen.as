@@ -74,6 +74,15 @@
 			_variables.amo = Global.amountInput;
 			_variables.cat = Global.category;
 			_variables.totDays = Global.totDays;
+			
+			Main.debugger.println("codSuc: " + Global.codSuc);
+			Main.debugger.println("codMod: " + Global.codMod);
+			Main.debugger.println("codTrans: " + Global.codTrans);
+			Main.debugger.println("codRel: " + Global.codRel);
+			Main.debugger.println("amountInput: " + Global.amountInput);
+			Main.debugger.println("category: " + Global.category);
+			Main.debugger.println("totDays: " + Global.totDays);
+			
 			var _request:URLRequest = new URLRequest(Global.URLfile);
 			_request.method = URLRequestMethod.POST;
 			_request.data = _variables;
@@ -81,10 +90,15 @@
 			loader.addEventListener(IOErrorEvent.IO_ERROR, handleIOError);
 			loader.load(_request);
 		}
-		private function handleIOError(evt:Event)
+		
+		private function handleIOError(e:IOErrorEvent):void 
 		{
-			Main.debugger.println("Failed to send");
+			Main.debugger.println("Failed to send: " + e.text);
 		}
+		//private function handleIOError(evt:Event)
+		//{
+			//Main.debugger.println("Failed to send");
+		//}
 		
 		private function loadingdata(evt:Event)
 		{
