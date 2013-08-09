@@ -198,12 +198,13 @@
 		public static function isTimeToWin():Boolean 
 		{
 			Global.winnerDays = getWinnerDays();
-			
+			trace("s: " + Global.startDate);
+			trace("e: "+Global.todayDate);
 			var elapsedNoBusinessDays:int = getNoBusinessDaysElapsed(Global.startDate, Global.todayDate);
 			var remainingPrizes:int = Global.iniStock - Global.stock;
 			var i:int;
 			var accumulated:int = 0;
-			
+			trace(">"+elapsedNoBusinessDays);
 			for (i = 0; i <= elapsedNoBusinessDays; i++)
 			{
 				accumulated += Global.winnerDays[i].prizes;

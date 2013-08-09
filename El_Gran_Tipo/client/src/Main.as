@@ -26,7 +26,7 @@
 			var d:Boolean = ExternalInterface.call("checkDebug");
 			
 			//Modificar la siguiente línea
-			debugger.visible = true;
+			debugger.visible = false;
 			debugger.setText("Start Application ");
 			Global.stage = stage;
 			

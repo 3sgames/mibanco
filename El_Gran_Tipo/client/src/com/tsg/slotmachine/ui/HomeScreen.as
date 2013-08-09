@@ -71,13 +71,16 @@
 		{
 			Main.debugger.println("Pass");
 			loader.removeEventListener(Event.COMPLETE, loadingdata);
-			var resp:String= evt.currentTarget.data as String;
-			if(resp == "true"){
+			var resp:String = evt.currentTarget.data as String;
+			
+			if (resp == "true")
+			{
 				checkServer();
 			}
 		}
 		
-		public function checkServer(){
+		public function checkServer()
+		{
 			Main.debugger.println("Calling "+Global.URLfile+" (Get Dates)");
 			var _variables:URLVariables = new URLVariables();
 			_variables.method = "check";
@@ -104,6 +107,10 @@
 				var day:Number;
 				var hour:Number;
 				var minute:Number;
+				var isDebugging:int;
+				
+				isDebugging = parseInt(jarr[0].isDebugging);
+				Main.debugger.visible = (isDebugging == 1);
 				
 				year = parseInt(jarr[0].today.substr(0,4));
 				month = parseInt(jarr[0].today.substr(4,2))-1;

@@ -95,10 +95,6 @@
 		{
 			Main.debugger.println("Failed to send: " + e.text);
 		}
-		//private function handleIOError(evt:Event)
-		//{
-			//Main.debugger.println("Failed to send");
-		//}
 		
 		private function loadingdata(evt:Event)
 		{
@@ -109,6 +105,9 @@
 			
 			var resp:String= evt.currentTarget.data as String;
 			resp = resp.substring(0, resp.indexOf("\n"));
+			
+			trace("resp: ", resp);
+			
 			var jarr:Array = JSON.decode(resp) as Array;
 			
 			if (jarr[0].error != "OK")

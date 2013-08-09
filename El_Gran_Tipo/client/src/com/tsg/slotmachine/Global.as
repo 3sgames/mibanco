@@ -38,7 +38,8 @@
 		
 		//public static var businessDays:Array = [];
 		
-		public static var URLfile:String = "http://bmesrvd7:8070/GranTipo/post.jsp";
+		//public static var URLfile:String = "http://172.17.1.6:80/GranTipo/post_noWSDL.jsp";
+		public static var URLfile:String = "post.jsp";
 		
 		public static var timeToWin:Boolean = new Boolean();
 		static public var seed:Number;
@@ -54,7 +55,7 @@
 			
 		}
 		
-		public static function flush() 
+		public static function flush()
 		{
 			codSuc = "";
 			codMod = "";

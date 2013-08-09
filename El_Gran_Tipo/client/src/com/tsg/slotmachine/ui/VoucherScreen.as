@@ -65,6 +65,8 @@
 		
 		private function onPlay(e:MouseEvent):void 
 		{
+			trace("amount input " + Global.amountInput);
+			
 			Global.codSuc = content["txtSuc"].text;
 			Global.codMod = content["txtMod"].text;
 			Global.codTrans = content["txtTrans"].text;
@@ -76,9 +78,15 @@
 			   (Global.codRel.length == 0 || Global.codRel.length > 4) ||
 			   parseFloat(Global.amountInput) < 50 ||
 			   !checkStartDate() || !checkEndDate())
+			   {
+				trace("S");
 				ScreenManager.instance.gotoScreen(ErrorScreen);
+			   }
 			else
+			{
+				trace("N");
 				ScreenManager.instance.gotoScreen(WaitScreen);
+			}
 		}
 		
 		private function checkStartDate():Boolean
